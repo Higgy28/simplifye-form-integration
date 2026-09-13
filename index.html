@@ -11,7 +11,9 @@
 
 <header class="site-header">
   <div class="container header-inner">
-    <a href="#top" class="logo">Simplifye<span>Lettings</span></a>
+    <a href="#top" class="logo">
+      <img src="assets/Simplifye_Logo.png" alt="Simplifye Lettings" class="logo-img">
+    </a>
 
     <nav class="main-nav" aria-label="Main navigation">
       <a href="#landlords">Landlords</a>
@@ -195,14 +197,25 @@
   <section class="section" id="contact">
     <div class="container contact-inner">
       <div class="contact-copy">
-        <h2 class="section-title">Get your free valuation</h2>
+        <h2 class="section-title">Tell us what you need</h2>
         <p class="section-lead">
-          Tell us a little about your property and one of our team will call you back with
-          an honest, no-obligation rental valuation — usually within one working day.
+          Whether you're booking a viewing, after a rental valuation, or looking to let out
+          your property, share a few details and one of our team will be in touch — usually
+          within one working day.
         </p>
       </div>
 
-      <form id="valuation-form" class="valuation-form" novalidate>
+      <form id="enquiry-form" class="valuation-form" novalidate>
+        <div class="form-row">
+          <label for="lead-type">I'm enquiring about:</label>
+          <select id="lead-type" name="lead_type" required>
+            <option value="" disabled selected>Please select an option</option>
+            <option value="viewing">Booking a viewing</option>
+            <option value="valuation">Getting a rental valuation</option>
+            <option value="landlord_letting">Letting out my property</option>
+          </select>
+        </div>
+
         <div class="form-row">
           <label for="name">Name</label>
           <input type="text" id="name" name="name" autocomplete="name" required>
@@ -219,7 +232,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary btn-large" id="submit-btn">
-          Get your free valuation
+          Send my enquiry
         </button>
 
         <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
