@@ -2,18 +2,19 @@
   var ENDPOINT_URL =
     "https://script.google.com/macros/s/AKfycbzi5IJy3Uvbwwwstsok33XN9cHdtHTVMDGyst2wsm0WGGmQZYr9YZlpswMov6-tx58DZw/exec";
 
-  var form = document.getElementById("valuation-form");
+  var form = document.getElementById("enquiry-form");
   var status = document.getElementById("form-status");
   var submitBtn = document.getElementById("submit-btn");
 
   form.addEventListener("submit", function (event) {
     event.preventDefault();
 
+    var leadType = document.getElementById("lead-type").value;
     var name = document.getElementById("name").value.trim();
     var phone = document.getElementById("phone").value.trim();
     var property = document.getElementById("property").value.trim();
 
-    if (!name || !phone || !property) {
+    if (!leadType || !name || !phone || !property) {
       status.textContent = "Please fill in every field so we can get back to you.";
       status.className = "form-status error";
       return;
@@ -24,7 +25,7 @@
     status.textContent = "";
     status.className = "form-status";
 
-    var payload = { name: name, phone: phone, property: property };
+    var payload = { name: name, phone: phone, property: property, lead_type: leadType };
 
     // Google Apps Script web apps don't return CORS headers, so the response
     // body can't be read from the browser. We send the request in "no-cors"
@@ -49,7 +50,7 @@
       })
       .finally(function () {
         submitBtn.disabled = false;
-        submitBtn.textContent = "Get your free valuation";
+        submitBtn.textContent = "Send my enquiry";
       });
   });
 })();
