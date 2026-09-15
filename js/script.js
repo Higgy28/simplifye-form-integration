@@ -1,6 +1,6 @@
 (function () {
   var ENDPOINT_URL =
-    "https://script.google.com/macros/s/AKfycbwQAHcrrSSK_cwM1nlGBqmE-8kHDTxPHr9i20JRP8Ojht-j5BXncH1h3_7yp1r8p2S8rg/exec";
+    "https://script.google.com/macros/s/AKfycbzVfrr6SmsitpbVzjH0wu-m0QFXUfxmLBNxbG2WN9v1Su1zB0QL1fIwnPLzVa39EVA1xQ/exec";
 
   var form = document.getElementById("enquiry-form");
   var status = document.getElementById("form-status");
