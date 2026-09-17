@@ -17,6 +17,7 @@
 
     <nav class="main-nav" aria-label="Main navigation">
       <a href="#landlords">Landlords</a>
+      <a href="#properties">Properties</a>
       <a href="#renting">Renting</a>
       <a href="#contact">Contact</a>
     </nav>
@@ -44,6 +45,19 @@
         <a href="#contact" class="btn btn-primary btn-large">Free rental valuation</a>
         <a href="#packages" class="btn btn-secondary btn-large">See our packages</a>
       </div>
+    </div>
+  </section>
+
+  <!-- PROPERTIES -->
+  <section class="section section-alt" id="properties">
+    <div class="container">
+      <h2 class="section-title">Current properties</h2>
+      <p class="section-lead">
+        A snapshot of homes we're currently letting. Click a listing for the full details,
+        or get in touch to arrange a viewing.
+      </p>
+
+      <div class="properties-grid" id="properties-grid"></div>
     </div>
   </section>
 
@@ -242,6 +256,46 @@
 
 </main>
 
+<div class="modal-overlay" id="property-modal" hidden>
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-address">
+    <button type="button" class="modal-close" id="modal-close" aria-label="Close property details">✕</button>
+
+    <div class="property-image property-image-large" aria-hidden="true">
+      <span>🏠</span>
+      <span class="property-image-label">Photo placeholder</span>
+    </div>
+
+    <div class="modal-body">
+      <h3 id="modal-address"></h3>
+      <p class="property-price" id="modal-price"></p>
+      <p id="modal-desc"></p>
+
+      <div class="modal-facts">
+        <div>
+          <p class="modal-fact-label">Bedrooms</p>
+          <p class="modal-fact-value" id="modal-beds"></p>
+        </div>
+        <div>
+          <p class="modal-fact-label">Bathrooms</p>
+          <p class="modal-fact-value" id="modal-baths"></p>
+        </div>
+        <div>
+          <p class="modal-fact-label">Property type</p>
+          <p class="modal-fact-value" id="modal-type"></p>
+        </div>
+        <div>
+          <p class="modal-fact-label">Available from</p>
+          <p class="modal-fact-value" id="modal-available"></p>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-primary btn-large" id="modal-enquire">
+        Enquire about this property
+      </button>
+    </div>
+  </div>
+</div>
+
 <footer class="site-footer">
   <div class="container footer-inner">
     <div class="footer-brand">
@@ -251,6 +305,7 @@
 
     <nav class="footer-nav" aria-label="Footer navigation">
       <a href="#landlords">Landlords</a>
+      <a href="#properties">Properties</a>
       <a href="#renting">Renting</a>
       <a href="#contact">Contact</a>
     </nav>
