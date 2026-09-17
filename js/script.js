@@ -13,6 +13,7 @@
     var name = document.getElementById("name").value.trim();
     var phone = document.getElementById("phone").value.trim();
     var property = document.getElementById("property").value.trim();
+    var preferredViewing = document.getElementById("preferred-viewing").value.trim();
 
     if (!leadType || !name || !phone || !property) {
       status.textContent = "Please fill in every field so we can get back to you.";
@@ -25,7 +26,13 @@
     status.textContent = "";
     status.className = "form-status";
 
-    var payload = { name: name, phone: phone, property: property, lead_type: leadType };
+    var payload = {
+      name: name,
+      phone: phone,
+      property: property,
+      lead_type: leadType,
+      preferred_viewing_time: preferredViewing
+    };
 
     // Google Apps Script web apps don't return CORS headers, so the response
     // body can't be read from the browser. We send the request in "no-cors"
@@ -100,7 +107,71 @@
   var modalBaths = document.getElementById("modal-baths");
   var modalType = document.getElementById("modal-type");
   var modalAvailable = document.getElementById("modal-available");
+  var tourDaysContainer = document.getElementById("tour-days");
+  var tourTimeButtons = document.querySelectorAll(".tour-time-btn");
   var currentProperty = null;
+  var selectedTourDay = null;
+  var selectedTourTime = null;
+
+  var DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  for (var i = 0; i < 7; i++) {
+    (function (offset) {
+      var date = new Date();
+      date.setDate(date.getDate() + offset);
+
+      var dayName = offset === 0 ? "Today" : offset === 1 ? "Tomorrow" : DAY_NAMES[date.getDay()];
+      var fullLabel = offset === 0 || offset === 1
+        ? DAY_NAMES[date.getDay()] + " " + date.getDate()
+        : dayName + " " + date.getDate();
+
+      var dayBtn = document.createElement("button");
+      dayBtn.type = "button";
+      dayBtn.className = "tour-day-btn";
+      dayBtn.innerHTML =
+        '<span class="tour-day-name"></span><span class="tour-day-num"></span>';
+      dayBtn.querySelector(".tour-day-name").textContent = dayName;
+      dayBtn.querySelector(".tour-day-num").textContent = date.getDate();
+      dayBtn.setAttribute("aria-label", fullLabel);
+
+      dayBtn.addEventListener("click", function () {
+        var alreadySelected = dayBtn.classList.contains("selected");
+        tourDaysContainer.querySelectorAll(".tour-day-btn").forEach(function (btn) {
+          btn.classList.remove("selected");
+        });
+        if (alreadySelected) {
+          selectedTourDay = null;
+        } else {
+          dayBtn.classList.add("selected");
+          selectedTourDay = fullLabel;
+        }
+      });
+
+      tourDaysContainer.appendChild(dayBtn);
+    })(i);
+  }
+
+  tourTimeButtons.forEach(function (timeBtn) {
+    timeBtn.addEventListener("click", function () {
+      var alreadySelected = timeBtn.classList.contains("selected");
+      tourTimeButtons.forEach(function (btn) { btn.classList.remove("selected"); });
+      if (alreadySelected) {
+        selectedTourTime = null;
+      } else {
+        timeBtn.classList.add("selected");
+        selectedTourTime = timeBtn.getAttribute("data-time");
+      }
+    });
+  });
+
+  function resetTourSelection() {
+    selectedTourDay = null;
+    selectedTourTime = null;
+    tourDaysContainer.querySelectorAll(".tour-day-btn").forEach(function (btn) {
+      btn.classList.remove("selected");
+    });
+    tourTimeButtons.forEach(function (btn) { btn.classList.remove("selected"); });
+  }
 
   function openPropertyModal(property) {
     currentProperty = property;
@@ -111,6 +182,7 @@
     modalBaths.textContent = property.baths;
     modalType.textContent = property.type;
     modalAvailable.textContent = property.availableFrom;
+    resetTourSelection();
     modal.hidden = false;
     document.body.classList.add("modal-open");
     modalClose.focus();
@@ -174,6 +246,8 @@
     if (!currentProperty) return;
     document.getElementById("property").value = currentProperty.address;
     document.getElementById("lead-type").value = "viewing";
+    document.getElementById("preferred-viewing").value =
+      selectedTourDay && selectedTourTime ? selectedTourDay + " · " + selectedTourTime : "";
     closePropertyModal();
     document.getElementById("contact").scrollIntoView({ behavior: "smooth" });
   });

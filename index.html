@@ -245,6 +245,11 @@
           <input type="text" id="property" name="property" autocomplete="street-address" required>
         </div>
 
+        <div class="form-row">
+          <label for="preferred-viewing">Preferred viewing time <span class="optional-tag">(optional)</span></label>
+          <input type="text" id="preferred-viewing" name="preferred_viewing_time" placeholder="e.g. Thu 18 Sep · Morning">
+        </div>
+
         <button type="submit" class="btn btn-primary btn-large" id="submit-btn">
           Send my enquiry
         </button>
@@ -286,6 +291,18 @@
         <div>
           <p class="modal-fact-label">Available from</p>
           <p class="modal-fact-value" id="modal-available"></p>
+        </div>
+      </div>
+
+      <div class="tour-section">
+        <p class="tour-label">Tour this home</p>
+
+        <div class="tour-days" id="tour-days"></div>
+
+        <div class="tour-times" id="tour-times">
+          <button type="button" class="tour-time-btn" data-time="Morning">Morning</button>
+          <button type="button" class="tour-time-btn" data-time="Afternoon">Afternoon</button>
+          <button type="button" class="tour-time-btn" data-time="Evening">Evening</button>
         </div>
       </div>
 
