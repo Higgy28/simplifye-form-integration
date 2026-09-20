@@ -1,7 +1,169 @@
 (function () {
-  var ENDPOINT_URL =
-    "https://script.google.com/macros/s/AKfycbz4sKxOS8UxZfr7YxxeBNe2E00giRlNSCbBV07-bx6SqO1Z_DfdxBRSurvpqEU8XuHEqg/exec";
+  var properties = window.SIMPLIFYE_PROPERTIES || [];
 
+  var grid = document.getElementById("listings-grid");
+  var chipsContainer = document.getElementById("area-chips");
+  var resultsCount = document.getElementById("results-count");
+  var noResults = document.getElementById("no-results");
+  var sortSelect = document.getElementById("sort-select");
+  var searchBar = document.getElementById("search-bar");
+  var areaSelect = document.getElementById("search-area");
+  var priceSelect = document.getElementById("search-price");
+  var bedsSelect = document.getElementById("search-beds");
+  var typeSelect = document.getElementById("search-type");
+
+  var activeCity = "All";
+
+  function formatPrice(value) {
+    return "£" + value.toLocaleString("en-GB") + " pcm";
+  }
+
+  function uniqueSorted(values) {
+    return values.filter(function (value, index) {
+      return values.indexOf(value) === index;
+    }).sort();
+  }
+
+  var cities = uniqueSorted(properties.map(function (p) { return p.city; }));
+  var types = uniqueSorted(properties.map(function (p) { return p.type; }));
+
+  // Populate the hero search dropdowns from the data itself.
+  cities.forEach(function (city) {
+    var option = document.createElement("option");
+    option.value = city;
+    option.textContent = city;
+    areaSelect.appendChild(option);
+  });
+  types.forEach(function (type) {
+    var option = document.createElement("option");
+    option.value = type;
+    option.textContent = type;
+    typeSelect.appendChild(option);
+  });
+
+  function buildChips() {
+    ["All"].concat(cities).forEach(function (city) {
+      var chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "chip" + (city === activeCity ? " chip-active" : "");
+      chip.textContent = city;
+      chip.addEventListener("click", function () {
+        activeCity = city;
+        areaSelect.value = city === "All" ? "" : city;
+        chipsContainer.querySelectorAll(".chip").forEach(function (other) {
+          other.classList.remove("chip-active");
+        });
+        chip.classList.add("chip-active");
+        render();
+      });
+      chipsContainer.appendChild(chip);
+    });
+  }
+
+  function getFiltered() {
+    var maxPrice = priceSelect.value ? parseInt(priceSelect.value, 10) : null;
+    var minBeds = bedsSelect.value ? parseInt(bedsSelect.value, 10) : null;
+    var type = typeSelect.value;
+
+    var filtered = properties.filter(function (p) {
+      if (activeCity !== "All" && p.city !== activeCity) return false;
+      if (maxPrice !== null && p.price > maxPrice) return false;
+      if (minBeds !== null && p.beds < minBeds) return false;
+      if (type && p.type !== type) return false;
+      return true;
+    });
+
+    var sort = sortSelect.value;
+    if (sort === "price-asc") {
+      filtered.sort(function (a, b) { return a.price - b.price; });
+    } else if (sort === "price-desc") {
+      filtered.sort(function (a, b) { return b.price - a.price; });
+    } else if (sort === "recent") {
+      filtered.sort(function (a, b) { return a.listed < b.listed ? 1 : -1; });
+    }
+
+    return filtered;
+  }
+
+  function buildCard(property) {
+    var card = document.createElement("a");
+    card.className = "listing-card";
+    card.href = "listing.html?id=" + encodeURIComponent(property.id);
+    card.setAttribute(
+      "aria-label",
+      property.address + ", " + property.city + ", " + formatPrice(property.price)
+    );
+
+    card.innerHTML =
+      '<div class="card-media">' +
+        '<img alt="" loading="lazy">' +
+        '<span class="listing-badge" hidden></span>' +
+        '<span class="card-photo-count">' +
+          '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 8h3l2-2h8l2 2h3v12H3z"/><circle cx="12" cy="13" r="3.4"/></svg>' +
+          '<span class="photo-count-value"></span>' +
+        "</span>" +
+      "</div>" +
+      '<div class="card-body">' +
+        '<p class="card-price"></p>' +
+        '<p class="card-specs"></p>' +
+        '<p class="card-address"></p>' +
+        '<p class="card-area"></p>' +
+      "</div>";
+
+    var image = card.querySelector("img");
+    image.src = property.images[0];
+
+    var badge = card.querySelector(".listing-badge");
+    if (property.badge) {
+      badge.textContent = property.badge;
+      badge.setAttribute("data-badge", property.badge);
+      badge.hidden = false;
+    }
+
+    card.querySelector(".photo-count-value").textContent = property.images.length;
+    card.querySelector(".card-price").textContent = formatPrice(property.price);
+    card.querySelector(".card-specs").innerHTML =
+      "<strong>" + property.beds + "</strong> bed &nbsp;<strong>" + property.baths +
+      "</strong> bath &nbsp;<strong>" + property.sqft.toLocaleString("en-GB") +
+      "</strong> sqft &nbsp;" + property.type;
+    card.querySelector(".card-address").textContent = property.address;
+    card.querySelector(".card-area").textContent = property.area + ", " + property.city;
+
+    return card;
+  }
+
+  function render() {
+    var filtered = getFiltered();
+
+    grid.innerHTML = "";
+    filtered.forEach(function (property) {
+      grid.appendChild(buildCard(property));
+    });
+
+    var where = activeCity === "All" ? "across the UK" : "in " + activeCity;
+    resultsCount.innerHTML =
+      "<strong>" + filtered.length + (filtered.length === 1 ? " home</strong> to let " : " homes</strong> to let ") + where;
+
+    noResults.hidden = filtered.length > 0;
+  }
+
+  searchBar.addEventListener("submit", function (event) {
+    event.preventDefault();
+    activeCity = areaSelect.value || "All";
+    chipsContainer.querySelectorAll(".chip").forEach(function (chip) {
+      chip.classList.toggle("chip-active", chip.textContent === activeCity);
+    });
+    render();
+    document.getElementById("homes").scrollIntoView({ behavior: "smooth" });
+  });
+
+  sortSelect.addEventListener("change", render);
+
+  buildChips();
+  render();
+})();
+
+(function () {
   var form = document.getElementById("enquiry-form");
   var status = document.getElementById("form-status");
   var submitBtn = document.getElementById("submit-btn");
@@ -9,13 +171,17 @@
   form.addEventListener("submit", function (event) {
     event.preventDefault();
 
-    var leadType = document.getElementById("lead-type").value;
-    var name = document.getElementById("name").value.trim();
-    var phone = document.getElementById("phone").value.trim();
-    var property = document.getElementById("property").value.trim();
-    var preferredViewing = document.getElementById("preferred-viewing").value.trim();
+    var payload = {
+      name: document.getElementById("name").value.trim(),
+      phone: document.getElementById("phone").value.trim(),
+      email: document.getElementById("email").value.trim(),
+      property: document.getElementById("property").value.trim(),
+      lead_type: document.getElementById("lead-type").value,
+      preferred_viewing_time: document.getElementById("preferred-viewing").value.trim(),
+      sms_consent: document.getElementById("sms-consent").checked
+    };
 
-    if (!leadType || !name || !phone || !property) {
+    if (!payload.lead_type || !payload.name || !payload.phone || !payload.email || !payload.property) {
       status.textContent = "Please fill in every field so we can get back to you.";
       status.className = "form-status error";
       return;
@@ -26,229 +192,19 @@
     status.textContent = "";
     status.className = "form-status";
 
-    var payload = {
-      name: name,
-      phone: phone,
-      property: property,
-      lead_type: leadType,
-      preferred_viewing_time: preferredViewing
-    };
-
-    // Google Apps Script web apps don't return CORS headers, so the response
-    // body can't be read from the browser. We send the request in "no-cors"
-    // mode: if the network request itself doesn't fail, we treat it as a
-    // successful submission.
-    fetch(ENDPOINT_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    })
+    window.submitEnquiry(payload)
       .then(function () {
-        status.textContent =
-          "Thanks! One of our team will call you shortly.";
+        status.textContent = window.SIMPLIFYE_SUCCESS_MESSAGE;
         status.className = "form-status success";
         form.reset();
       })
       .catch(function () {
-        status.textContent =
-          "Sorry, something went wrong sending your details. Please call us on 0800 123 4567 instead.";
+        status.textContent = window.SIMPLIFYE_ERROR_MESSAGE;
         status.className = "form-status error";
       })
       .finally(function () {
         submitBtn.disabled = false;
         submitBtn.textContent = "Send my enquiry";
       });
-  });
-})();
-
-(function () {
-  var properties = [
-    {
-      address: "20 Elm Street, Glasgow",
-      price: "£950 pcm",
-      beds: 2,
-      baths: 1,
-      type: "Flat",
-      availableFrom: "1 October 2026",
-      shortDesc: "A bright two-bedroom flat moments from the West End's cafes and transport links.",
-      fullDesc: "This bright, top-floor two-bedroom flat sits on a quiet residential street just a short walk from the West End's cafes, shops and transport links. It's been recently redecorated throughout and comes with a modern kitchen and a private garden space to the rear, making it an easy, comfortable base for professionals or sharers."
-    },
-    {
-      address: "14 Oak Avenue, Edinburgh",
-      price: "£1,250 pcm",
-      beds: 3,
-      baths: 2,
-      type: "Terraced house",
-      availableFrom: "15 October 2026",
-      shortDesc: "A spacious three-bedroom family home with a private garden and driveway.",
-      fullDesc: "This spacious three-bedroom terraced home offers generous family living across two floors, with a private rear garden and off-street driveway parking. It's within easy reach of local schools and regular bus routes into the city centre, and the open-plan kitchen-diner makes it a natural fit for family life."
-    },
-    {
-      address: "8 Willow Court, Manchester",
-      price: "£825 pcm",
-      beds: 1,
-      baths: 1,
-      type: "Apartment",
-      availableFrom: "Now",
-      shortDesc: "A modern one-bedroom apartment ready to move into straight away.",
-      fullDesc: "This modern one-bedroom apartment is available to move into straight away, with an open-plan living space, contemporary fittings and secure entry. It's ideally placed for the city centre and nearby transport links, making it a great option for a single professional or couple."
-    }
-  ];
-
-  var grid = document.getElementById("properties-grid");
-  var modal = document.getElementById("property-modal");
-  var modalClose = document.getElementById("modal-close");
-  var modalEnquireBtn = document.getElementById("modal-enquire");
-  var modalAddress = document.getElementById("modal-address");
-  var modalPrice = document.getElementById("modal-price");
-  var modalDesc = document.getElementById("modal-desc");
-  var modalBeds = document.getElementById("modal-beds");
-  var modalBaths = document.getElementById("modal-baths");
-  var modalType = document.getElementById("modal-type");
-  var modalAvailable = document.getElementById("modal-available");
-  var tourDaysContainer = document.getElementById("tour-days");
-  var tourTimeButtons = document.querySelectorAll(".tour-time-btn");
-  var currentProperty = null;
-  var selectedTourDay = null;
-  var selectedTourTime = null;
-
-  var DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-  for (var i = 0; i < 7; i++) {
-    (function (offset) {
-      var date = new Date();
-      date.setDate(date.getDate() + offset);
-
-      var dayName = offset === 0 ? "Today" : offset === 1 ? "Tomorrow" : DAY_NAMES[date.getDay()];
-      var fullLabel = offset === 0 || offset === 1
-        ? DAY_NAMES[date.getDay()] + " " + date.getDate()
-        : dayName + " " + date.getDate();
-
-      var dayBtn = document.createElement("button");
-      dayBtn.type = "button";
-      dayBtn.className = "tour-day-btn";
-      dayBtn.innerHTML =
-        '<span class="tour-day-name"></span><span class="tour-day-num"></span>';
-      dayBtn.querySelector(".tour-day-name").textContent = dayName;
-      dayBtn.querySelector(".tour-day-num").textContent = date.getDate();
-      dayBtn.setAttribute("aria-label", fullLabel);
-
-      dayBtn.addEventListener("click", function () {
-        var alreadySelected = dayBtn.classList.contains("selected");
-        tourDaysContainer.querySelectorAll(".tour-day-btn").forEach(function (btn) {
-          btn.classList.remove("selected");
-        });
-        if (alreadySelected) {
-          selectedTourDay = null;
-        } else {
-          dayBtn.classList.add("selected");
-          selectedTourDay = fullLabel;
-        }
-      });
-
-      tourDaysContainer.appendChild(dayBtn);
-    })(i);
-  }
-
-  tourTimeButtons.forEach(function (timeBtn) {
-    timeBtn.addEventListener("click", function () {
-      var alreadySelected = timeBtn.classList.contains("selected");
-      tourTimeButtons.forEach(function (btn) { btn.classList.remove("selected"); });
-      if (alreadySelected) {
-        selectedTourTime = null;
-      } else {
-        timeBtn.classList.add("selected");
-        selectedTourTime = timeBtn.getAttribute("data-time");
-      }
-    });
-  });
-
-  function resetTourSelection() {
-    selectedTourDay = null;
-    selectedTourTime = null;
-    tourDaysContainer.querySelectorAll(".tour-day-btn").forEach(function (btn) {
-      btn.classList.remove("selected");
-    });
-    tourTimeButtons.forEach(function (btn) { btn.classList.remove("selected"); });
-  }
-
-  function openPropertyModal(property) {
-    currentProperty = property;
-    modalAddress.textContent = property.address;
-    modalPrice.textContent = property.price;
-    modalDesc.textContent = property.fullDesc;
-    modalBeds.textContent = property.beds;
-    modalBaths.textContent = property.baths;
-    modalType.textContent = property.type;
-    modalAvailable.textContent = property.availableFrom;
-    resetTourSelection();
-    modal.hidden = false;
-    document.body.classList.add("modal-open");
-    modalClose.focus();
-  }
-
-  function closePropertyModal() {
-    modal.hidden = true;
-    document.body.classList.remove("modal-open");
-    currentProperty = null;
-  }
-
-  properties.forEach(function (property) {
-    var card = document.createElement("div");
-    card.className = "property-card";
-    card.setAttribute("role", "button");
-    card.setAttribute("tabindex", "0");
-    card.setAttribute("aria-label", "View details for " + property.address + ", " + property.price);
-
-    card.innerHTML =
-      '<div class="property-image" aria-hidden="true">' +
-        "<span>🏠</span>" +
-        '<span class="property-image-label">Photo placeholder</span>' +
-      "</div>" +
-      '<div class="property-body">' +
-        '<p class="property-address"></p>' +
-        '<p class="property-price"></p>' +
-        '<p class="property-meta"></p>' +
-        '<p class="property-desc"></p>' +
-      "</div>";
-
-    card.querySelector(".property-address").textContent = property.address;
-    card.querySelector(".property-price").textContent = property.price;
-    card.querySelector(".property-meta").textContent =
-      property.beds + " bed · " + property.baths + " bath · " + property.type;
-    card.querySelector(".property-desc").textContent = property.shortDesc;
-
-    card.addEventListener("click", function () {
-      openPropertyModal(property);
-    });
-    card.addEventListener("keydown", function (event) {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        openPropertyModal(property);
-      }
-    });
-
-    grid.appendChild(card);
-  });
-
-  modalClose.addEventListener("click", closePropertyModal);
-
-  modal.addEventListener("click", function (event) {
-    if (event.target === modal) closePropertyModal();
-  });
-
-  document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape" && !modal.hidden) closePropertyModal();
-  });
-
-  modalEnquireBtn.addEventListener("click", function () {
-    if (!currentProperty) return;
-    document.getElementById("property").value = currentProperty.address;
-    document.getElementById("lead-type").value = "viewing";
-    document.getElementById("preferred-viewing").value =
-      selectedTourDay && selectedTourTime ? selectedTourDay + " · " + selectedTourTime : "";
-    closePropertyModal();
-    document.getElementById("contact").scrollIntoView({ behavior: "smooth" });
   });
 })();
