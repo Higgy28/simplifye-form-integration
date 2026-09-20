@@ -168,6 +168,18 @@
   var status = document.getElementById("form-status");
   var submitBtn = document.getElementById("submit-btn");
   var leadTypeSelect = document.getElementById("lead-type");
+  var preferredTimeRow = document.getElementById("preferred-time-row");
+  var preferredTimeInput = document.getElementById("preferred-viewing");
+
+  // Only a viewing has a time to arrange. Clearing on hide stops a value typed
+  // for a viewing from being submitted after switching to another enquiry type.
+  function syncPreferredTime() {
+    var isViewing = leadTypeSelect.value === "viewing";
+    preferredTimeRow.hidden = !isViewing;
+    if (!isViewing) preferredTimeInput.value = "";
+  }
+
+  leadTypeSelect.addEventListener("change", syncPreferredTime);
 
   // Nav links can preselect an enquiry type, e.g. "Sell" → ?intent=sale#contact
   var INTENT_LEAD_TYPES = { sale: "sale_valuation" };
@@ -183,12 +195,15 @@
     return true;
   }
 
+  // Setting select.value in code doesn't fire "change", so sync explicitly.
   applyIntent(new URLSearchParams(window.location.search).get("intent"));
+  syncPreferredTime();
 
   // Handle same-page clicks without a reload, so the scroll stays smooth.
   document.querySelectorAll("[data-intent]").forEach(function (link) {
     link.addEventListener("click", function (event) {
       if (!applyIntent(link.getAttribute("data-intent"))) return;
+      syncPreferredTime();
       event.preventDefault();
       history.replaceState(null, "", link.getAttribute("href"));
       document.getElementById("contact").scrollIntoView({ behavior: "smooth" });
@@ -224,6 +239,7 @@
         status.textContent = window.SIMPLIFYE_SUCCESS_MESSAGE;
         status.className = "form-status success";
         form.reset();
+        syncPreferredTime();
       })
       .catch(function () {
         status.textContent = window.SIMPLIFYE_ERROR_MESSAGE;

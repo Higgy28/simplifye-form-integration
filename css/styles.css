@@ -496,6 +496,9 @@ p { margin: 0 0 16px; }
   margin-bottom: 18px;
 }
 
+/* display:flex above would otherwise beat the UA stylesheet's [hidden] rule */
+.form-row[hidden] { display: none; }
+
 .form-row label {
   font-weight: 600;
   font-size: 0.88rem;
