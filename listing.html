@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Property details — Simplifye Lettings</title>
+<meta name="description" content="Property details and viewing availability from Simplifye Lettings.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="demo-banner">
+  <div class="container demo-banner-inner">
+    <span class="demo-pill">Demo</span>
+    <p>This is a demo of how our response works. Book a viewing, ask a question or send an
+    enquiry on any listing and you'll get a response, so you can test how it all works.</p>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo">
+      <img src="assets/Simplifye_Logo.png" alt="Simplifye Lettings" class="logo-img">
+    </a>
+
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="index.html#homes" class="nav-pill nav-pill-active">Rent</a>
+      <a href="index.html#landlords" class="nav-pill">Landlords</a>
+      <a href="index.html#contact" class="nav-pill">Contact</a>
+    </nav>
+
+    <a href="tel:08001234567" class="phone-btn">
+      <span class="phone-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      </span>
+      0800 123 4567
+    </a>
+  </div>
+</header>
+
+<main class="listing-page" id="listing-page" hidden>
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="index.html#homes">Rent</a>
+      <span aria-hidden="true">/</span>
+      <a href="index.html#homes" id="crumb-city"></a>
+      <span aria-hidden="true">/</span>
+      <span id="crumb-address"></span>
+    </nav>
+
+    <div class="listing-layout">
+      <div class="listing-main">
+        <div class="gallery">
+          <div class="gallery-stage">
+            <img id="gallery-image" class="gallery-image" src="" alt="">
+            <span class="listing-badge" id="listing-badge" hidden></span>
+            <button type="button" class="gallery-arrow gallery-prev" id="gallery-prev" aria-label="Previous photo">‹</button>
+            <button type="button" class="gallery-arrow gallery-next" id="gallery-next" aria-label="Next photo">›</button>
+            <span class="gallery-counter" id="gallery-counter"></span>
+          </div>
+          <div class="gallery-thumbs" id="gallery-thumbs"></div>
+        </div>
+
+        <div class="listing-headline">
+          <div>
+            <p class="listing-price" id="listing-price"></p>
+            <p class="listing-specs" id="listing-specs"></p>
+          </div>
+        </div>
+
+        <h1 class="listing-address" id="listing-address"></h1>
+        <p class="listing-area" id="listing-area"></p>
+
+        <div class="facts-grid">
+          <div>
+            <p class="fact-label">Bedrooms</p>
+            <p class="fact-value" id="fact-beds"></p>
+          </div>
+          <div>
+            <p class="fact-label">Bathrooms</p>
+            <p class="fact-value" id="fact-baths"></p>
+          </div>
+          <div>
+            <p class="fact-label">Property type</p>
+            <p class="fact-value" id="fact-type"></p>
+          </div>
+          <div>
+            <p class="fact-label">Size</p>
+            <p class="fact-value" id="fact-sqft"></p>
+          </div>
+          <div>
+            <p class="fact-label">Available from</p>
+            <p class="fact-value" id="fact-available"></p>
+          </div>
+        </div>
+
+        <h2 class="listing-subhead">About this property</h2>
+        <p class="listing-desc" id="listing-desc"></p>
+      </div>
+
+      <aside class="listing-aside">
+        <div class="booking-card">
+          <div class="booking-tabs" role="tablist">
+            <button type="button" class="booking-tab booking-tab-active" id="tab-tour"
+                    role="tab" aria-selected="true" aria-controls="panel-tour">Schedule a tour</button>
+            <button type="button" class="booking-tab" id="tab-question"
+                    role="tab" aria-selected="false" aria-controls="panel-question">Ask a question</button>
+          </div>
+
+          <!-- TOUR PANEL -->
+          <div class="booking-panel" id="panel-tour" role="tabpanel" aria-labelledby="tab-tour">
+            <h2 class="booking-title">Tour this home</h2>
+            <p class="booking-sub">Pick a day and time. We'll call to confirm.</p>
+
+            <form id="tour-form" novalidate>
+              <p class="picker-label">Day</p>
+              <div class="tour-days" id="tour-days"></div>
+
+              <p class="picker-label">Time of day</p>
+              <div class="tour-times" id="tour-times">
+                <button type="button" class="tour-time-btn" data-time="Morning">
+                  <span class="tour-time-name">Morning</span>
+                  <span class="tour-time-range">9am to 12pm</span>
+                </button>
+                <button type="button" class="tour-time-btn" data-time="Afternoon">
+                  <span class="tour-time-name">Afternoon</span>
+                  <span class="tour-time-range">12pm to 5pm</span>
+                </button>
+                <button type="button" class="tour-time-btn" data-time="Evening">
+                  <span class="tour-time-name">Evening</span>
+                  <span class="tour-time-range">5pm to 8pm</span>
+                </button>
+              </div>
+
+              <div class="form-row">
+                <label for="tour-name">Name</label>
+                <input type="text" id="tour-name" autocomplete="name" required>
+              </div>
+              <div class="form-row">
+                <label for="tour-phone">Mobile phone</label>
+                <input type="tel" id="tour-phone" autocomplete="tel" placeholder="07700 900123" required>
+              </div>
+              <div class="form-row">
+                <label for="tour-email">Email</label>
+                <input type="email" id="tour-email" autocomplete="email" required>
+              </div>
+
+              <label class="consent-row">
+                <input type="checkbox" id="tour-consent">
+                <span>Optional: text me from Simplifye at the number above about this enquiry,
+                such as booking confirmations and reminders.</span>
+              </label>
+
+              <button type="submit" class="btn btn-primary btn-block" id="tour-submit">
+                Request this tour
+              </button>
+              <p class="form-status" id="tour-status" role="status" aria-live="polite"></p>
+            </form>
+          </div>
+
+          <!-- QUESTION PANEL -->
+          <div class="booking-panel" id="panel-question" role="tabpanel" aria-labelledby="tab-question" hidden>
+            <h2 class="booking-title">Ask a question</h2>
+            <p class="booking-sub">Send us a question about this home and we'll get back to you.</p>
+
+            <form id="question-form" novalidate>
+              <div class="form-row">
+                <label for="question-name">Name</label>
+                <input type="text" id="question-name" autocomplete="name" required>
+              </div>
+              <div class="form-row">
+                <label for="question-phone">Mobile phone</label>
+                <input type="tel" id="question-phone" autocomplete="tel" placeholder="07700 900123" required>
+              </div>
+              <div class="form-row">
+                <label for="question-email">Email</label>
+                <input type="email" id="question-email" autocomplete="email" required>
+              </div>
+
+              <label class="consent-row">
+                <input type="checkbox" id="question-consent">
+                <span>Optional: text me from Simplifye at the number above about this enquiry,
+                such as booking confirmations and reminders.</span>
+              </label>
+
+              <button type="submit" class="btn btn-primary btn-block" id="question-submit">
+                Send my question
+              </button>
+              <p class="form-status" id="question-status" role="status" aria-live="polite"></p>
+            </form>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</main>
+
+<section class="listing-missing" id="listing-missing" hidden>
+  <div class="container">
+    <h1 class="section-title">We couldn't find that property</h1>
+    <p class="section-lead">
+      It may have been let already, or the link might be incomplete.
+      Have a look at what's currently available instead.
+    </p>
+    <a href="index.html#homes" class="btn btn-primary btn-large">Browse current listings</a>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <span class="logo logo-footer">Simplifye<span>Lettings</span></span>
+      <p>Straightforward property letting and management for UK landlords.</p>
+    </div>
+
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <a href="index.html#homes">Rent</a>
+      <a href="index.html#landlords">Landlords</a>
+      <a href="index.html#packages">Packages</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+
+    <div class="footer-meta">
+      <p>0800 123 4567 · hello@simplifyelettings.example</p>
+      <p>&copy; 2026 Simplifye Lettings. All rights reserved.</p>
+      <p class="footer-disclaimer">This is a demonstration website built for sales purposes and does not represent a real letting agency.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/properties-data.js"></script>
+<script src="js/enquiry.js"></script>
+<script src="js/listing.js"></script>
+</body>
+</html>
