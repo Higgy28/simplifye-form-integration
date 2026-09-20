@@ -167,6 +167,33 @@
   var form = document.getElementById("enquiry-form");
   var status = document.getElementById("form-status");
   var submitBtn = document.getElementById("submit-btn");
+  var leadTypeSelect = document.getElementById("lead-type");
+
+  // Nav links can preselect an enquiry type, e.g. "Sell" → ?intent=sale#contact
+  var INTENT_LEAD_TYPES = { sale: "sale_valuation" };
+
+  function applyIntent(intent) {
+    var leadType = INTENT_LEAD_TYPES[intent];
+    if (!leadType) return false;
+    var hasOption = Array.prototype.some.call(leadTypeSelect.options, function (option) {
+      return option.value === leadType;
+    });
+    if (!hasOption) return false;
+    leadTypeSelect.value = leadType;
+    return true;
+  }
+
+  applyIntent(new URLSearchParams(window.location.search).get("intent"));
+
+  // Handle same-page clicks without a reload, so the scroll stays smooth.
+  document.querySelectorAll("[data-intent]").forEach(function (link) {
+    link.addEventListener("click", function (event) {
+      if (!applyIntent(link.getAttribute("data-intent"))) return;
+      event.preventDefault();
+      history.replaceState(null, "", link.getAttribute("href"));
+      document.getElementById("contact").scrollIntoView({ behavior: "smooth" });
+    });
+  });
 
   form.addEventListener("submit", function (event) {
     event.preventDefault();
