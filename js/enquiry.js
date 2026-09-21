@@ -2,7 +2,7 @@
 // "Schedule a tour" / "Ask a question" forms.
 (function () {
   var ENDPOINT_URL =
-    "https://script.google.com/macros/s/AKfycbw33fYVAYXbH-G7sEGoz-z02pso7XDG7juASDjvIr6dz_-E3bgo-zB9f2XLoyESbX06zQ/exec";
+    "https://script.google.com/macros/s/AKfycbwfGPURKnb400dWSJsVLVo-u2VjNKXGRAalH0mW-piKvBtk5Upxj1KXIfJ5mRVzwfus/exec";
 
   // Google Apps Script web apps don't return CORS headers, so the response body
   // can't be read from the browser. We send in "no-cors" mode: if the network
