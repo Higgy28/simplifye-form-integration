@@ -83,10 +83,9 @@ window.SIMPLIFYE_PROPERTIES = [
     shortDesc: "A quiet mews town house a few minutes from the Shore.",
     fullDesc: "Tucked into a cobbled mews just behind the main road, this two-bedroom town house is a genuinely quiet spot a few minutes' walk from the bars and restaurants of the Shore. Accommodation runs over two floors with a courtyard to the rear, and the whole place has been freshly decorated ready for a new tenant.",
     images: [
-      "assets/listings/listing-4-exterior.svg",
-      "assets/listings/listing-4-living.svg",
-      "assets/listings/listing-4-bedroom.svg",
-      "assets/listings/listing-4-kitchen.svg"
+      "assets/listings/3-cedar-mews-edinburgh-1.jpg",
+      "assets/listings/3-cedar-mews-edinburgh-2.jpg",
+      "assets/listings/3-cedar-mews-edinburgh-3.jpg"
     ]
   },
   {
