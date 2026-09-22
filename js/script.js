@@ -140,7 +140,7 @@
       grid.appendChild(buildCard(property));
     });
 
-    var where = activeCity === "All" ? "across the UK" : "in " + activeCity;
+    var where = activeCity === "All" ? "across Scotland" : "in " + activeCity;
     resultsCount.innerHTML =
       "<strong>" + filtered.length + (filtered.length === 1 ? " home</strong> to let " : " homes</strong> to let ") + where;
 
