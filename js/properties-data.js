@@ -52,12 +52,12 @@ window.SIMPLIFYE_PROPERTIES = [
     beds: 3,
     baths: 2,
     sqft: 1050,
-    type: "Semi-detached house",
+    type: "Detached house",
     availableFrom: "15 October 2026",
     listed: "2026-09-14",
     badge: "Viewings Sat",
-    shortDesc: "A modern three-bedroom semi on a quiet edge-of-town street.",
-    fullDesc: "A recently built semi-detached house finished in brick with a tile-hung upper storey, set back behind a small front garden with parking to the side. The ground floor runs as one open space from the dining area through to the sitting room, with wide windows keeping it bright through the day. Three bedrooms sit above, the main one a comfortable double.",
+    shortDesc: "A detached brick house with a steep tiled roof and hedged frontage.",
+    fullDesc: "A detached house in red brick under a steeply pitched tiled roof, with a dormer lighting the room in the roof and a clipped hedge screening it from the street. The living and dining space runs together at the rear, finished plainly in white with oak boards underfoot. Three bedrooms sit above, the main one a good double with fitted storage.",
     images: [
       "assets/listings/needless-road-perth-1.jpg",
       "assets/listings/needless-road-perth-2.jpg",
@@ -90,19 +90,20 @@ window.SIMPLIFYE_PROPERTIES = [
     address: "24 Roman Road",
     area: "Kilmardinny",
     city: "Bearsden",
-    price: 1850,
+    price: 1650,
     beds: 4,
     baths: 2,
-    sqft: 1620,
-    type: "Detached house",
+    sqft: 1450,
+    type: "Semi-detached house",
     availableFrom: "5 November 2026",
     listed: "2026-08-28",
     badge: "Reduced",
-    shortDesc: "A large four-bedroom family house with a long open-plan living space.",
-    fullDesc: "A substantial detached house given over almost entirely to open-plan living on the ground floor, with oak boards running the length of the room and shuttered windows down one side. A wide opening connects the sitting area through to a second reception room at the front. Upstairs the main bedroom is a generous double with full-height windows onto the garden.",
+    shortDesc: "A large four-bedroom semi with a long open-plan living space.",
+    fullDesc: "A recently built semi-detached house in brick with a tile-hung upper storey, set behind a low rail fence with parking to the side. The ground floor is given over almost entirely to open-plan living, with oak boards running the length of the room and shuttered windows down one side. Four bedrooms sit above across two floors, the main one a generous double with full-height windows onto the garden.",
     images: [
       "assets/listings/roman-road-bearsden-1.jpg",
-      "assets/listings/roman-road-bearsden-2.jpg"
+      "assets/listings/roman-road-bearsden-2.jpg",
+      "assets/listings/roman-road-bearsden-3.jpg"
     ]
   },
   {
@@ -140,10 +141,11 @@ window.SIMPLIFYE_PROPERTIES = [
     listed: "2026-09-04",
     badge: "",
     shortDesc: "A Victorian corner villa with bay windows and a walled front garden.",
-    fullDesc: "A Victorian semi-detached villa on the corner of the crescent, built in brick under a slate roof with bay windows to the front rooms and a low wall enclosing the garden. The position on the bend gives it windows on two sides and a wider outlook than its neighbours. Bedrooms have been kept plain and bright, with the smallest set up as a single.",
+    fullDesc: "A Victorian semi-detached villa on the corner of the crescent, built in brick under a slate roof with bay windows to the front rooms and a low wall enclosing the garden. The sitting room is a long, traditionally decorated space with a wide picture window looking onto the garden and room for two full suites. Bedrooms have been kept plainer and brighter, with the smallest set up as a single.",
     images: [
       "assets/listings/bellevue-crescent-ayr-1.jpg",
-      "assets/listings/bellevue-crescent-ayr-2.jpg"
+      "assets/listings/bellevue-crescent-ayr-2.jpg",
+      "assets/listings/bellevue-crescent-ayr-3.jpg"
     ]
   },
   {
